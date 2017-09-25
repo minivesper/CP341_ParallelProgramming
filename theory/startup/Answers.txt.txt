@@ -1,0 +1,22 @@
+1.What is Moore's Law and why is it relevant to computing?
+	Moore's law is the trend of tansistor doubling in computers every two years. This doubling allowed for faster CPU clocks.
+	This trend is useful but, at a certain point faster speeds cause heat problems. So instead of simply shoving as many transistors as possible,
+	many processor makers and using the increasingly small size of transistors to make multi-cored architecture with instruction level parallelism.
+
+2.What is the significance of processor clock speed? If we measure processor computational power as FLOPS, how could a 500 Mhz processor out perform a 1 Ghz processor?
+	A two core 500 Mhz processor would preform the same number of FLOPS in a second as a 1 core 1 Ghz processor. 
+	To outpreform the 1Ghz processor the 500 Mhz processor would have to have more than twice the number of cores the 1 Ghz processor contains.
+ 
+3.What are some ways we might measure and compare computer capability? List FLOPS and two options, discuss strengths/weaknesses of each.
+	FLOPS: The number of floating point operations that the cluster can complete per second.
+		+ standardizes a metric for rate of computation
+		- Does not think about power usage to produce those flops. metric is removed from real world of building systems.
+		- does not reveal load distribution across the cluster, just tot computational power.
+	FLOPS/W: flops per watt
+		+ useful for system planning. assists in cost vs power analysis
+		- not particularly useful in terms of upping the speed of a system. 
+		/ not a rate metric
+	I/Oops: the number of input and output operation a cluster can preform in a second.
+		+ Useful for database systems that do a tremendous amount of writing and reading
+		-not a measure of computational power, more a measure of information transportation power.
+		-does not consider load distribution, between nodes, only total information movement power.
