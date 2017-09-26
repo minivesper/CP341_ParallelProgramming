@@ -1,0 +1,36 @@
+1. What does speedup measure?
+  speedup is the ratio of the work of an algorithm on a single core, over the work of the same algorithm on some number of cores.
+
+2. What does efficiency measure?
+  efficiency is the speedup per worker. That is the ratio calculated in speedup, over the number of workers that produced that speedup
+
+3. Using the following task graph, where each task takes 5 seconds to complete:
+
+3a. What is the span?
+  3 tasks
+3b. Using a single processor, what is the expected runtime?
+  30 seconds
+3c. Using two processors, what is the expected speedup and efficiency?
+  speedup = 3/2 efficiency = 3/4
+3d. Using four processors, what is the expected speedup and efficiency?
+  speedup = 2 efficiency = 1/2
+3e. Using ten processors, what is the expected speedup and efficiency?
+  speedup = 2 efficient = 1/5
+3f. To get a 10x speedup, how much work must be added to the parallel region and how many processors would be required? What would the efficiency be?
+  To get a 10x speedup we have to add 24 parallel tasks and 28 cores. This would make the runtime on a single core 150 seconds.
+  speedup with 28 cores = 150/15 = 10. efficiency on 28 cores = 10/28 = 5/14
+
+4. A processor and memory module are 10 centimeters apart and connected by a bus with a data channel 256 bits wide.
+For simplicity assume the processor, bus, and memory operate at the same speed, 3 GHz.
+(This scenario is highly unrealistic; in most systems the processor and bus operate at significantly different frequencies)
+
+4a. The speed of light (3x10^8 m/s) sets a hard upper bound on how fast information can travel.
+If a processor performs a memory fetch, what is the minimum possible latency?
+Assume that only one cycle is required by the memory module to read the memory location (also highly unrealistic).
+Minimally, how many clock cycles must the CPU wait?
+  (.2/(3x10^8)) + (3*10^-9)
+  The first term is the amount of time the data takes to pass through the wire. .1 on the way there, and .1 on the way back. therefore the total distance
+  traveled is .2 meters. Inside the memory unit the clock ticks once in 3*10^-9 seconds. so after that amount of time it can pass the data back to where it was asked for.
+
+4b. What is the bandwidth between the processor and memory?
+  the wire can handle 256 bits at once, and since that amount of data can be sent every clock tick, the bandwidth is effectively 768*10^9 bits per second.

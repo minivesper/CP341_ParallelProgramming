@@ -1,0 +1,11 @@
+data dependencies: between the instructions and x
+overhead is higher for parallelism.
+think about work in serial versus parallel terms
+Amdahl's law: width of the graph is the number of cores that could be maximally efficient
+number of cores usefulness is maxed at width
+formulas: t_onecore = Wser + Wpar
+          t_pcores = Wser + Wpar/#cores
+
+Gustafvson-Barres: parallel speedup grows muh faster than serial speedup grows
+
+Flynn's taxonomy  
