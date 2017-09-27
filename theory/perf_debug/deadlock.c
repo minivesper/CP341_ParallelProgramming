@@ -10,11 +10,11 @@ int B=4;
 void proc_a() {
     int x,y;
     // lock a so that the value won't change unexpectedly
-    omp_set_lock(&lockA);
+    omp_set_lock(&lockB);
     x = A;
     x = x*2;
     // lock b during modification
-    omp_set_lock(&lockB);
+    omp_set_lock(&lockA);
     y = B;
     y -= x;
     B = y;

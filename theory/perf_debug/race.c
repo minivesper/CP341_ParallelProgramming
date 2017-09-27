@@ -8,11 +8,9 @@ int main(int argc, char** argv) {
     for(i=0;i<T;i++) {
         t_hello[i]=-1;
     }
-    i=0;
-    #pragma omp parallel num_threads(8)
-    {
+    #pragma omp parallel for
+    for(int i=0;i<T;i++) {
         t_hello[i]=omp_get_thread_num();
-        i++;
     }
 
     for(i=0;i<T;i++) {
