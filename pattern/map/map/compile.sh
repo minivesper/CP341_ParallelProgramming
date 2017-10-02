@@ -6,6 +6,9 @@ gcc -o recover_pins_serial serial.c -lcrypto -lm
 # Compile the OpenMP version
 gcc -o recover_pins_openmp -fopenmp openmp.c -lcrypto
 
+# Compile openMP ver2
+gcc -o recover_pins_openmpver2 -fopenmp openmp2.c -lcrypto
+
 # Compile the cilkplus version
 gcc -o recover_pins_cilk -fcilkplus cilk.c -lcrypto
 
