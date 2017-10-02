@@ -1,0 +1,11 @@
+lluster/Grid/System
+-> Computer/System
+logical structure
+-->Process
+--->Thread
+physical structure
+-->Socket/Processor
+--->CPU's/Cores/Processors
+---->Threads
+
+must match logical and physical structure

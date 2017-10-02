@@ -1,0 +1,25 @@
+1. Three C functions were mentioned in class for reading data from a file.
+What are they and how do they differ from one another?
+
+fscanf: fscanf reads a filestream of characters with string formatting
+fread: the most general of the three, fread reads some number of packets of some size, and stores what was read in a buffer
+fgets: fgets gets a single character from a filestream and stores it in a buffer
+
+2. Variables in a program can be allocated on the stack or in the heap.
+What is the difference between the stack and the heap with respect to persistence of the data (when is memory space reclaimed)?
+
+variables allocated in the stack disappear as soon as we change stack space.
+That means when we return from a function or step into another function, that data is lost.
+If we store variables in the heap, that data remains until we free that data. That causes its own problems, but allows for passing of data between functions
+
+3. Most modern programming languages have objects but do not have structs.
+Are modern languages losing any functionality by not have structs? Explain your answer.
+
+Modern languages are losing some specific memory manipulation. It is less efficient to let the compiler make all the memory decisions for you, but much easier to do so.
+C, and structs, are useful because it gives you direct control over data's locations in memory.
+
+4. C does not have objects though C++ does. Even though C does not have objects, can C be used to implement a program using object-like logic?
+Explain your answer.
+
+Yes, C has structs, which contain the class instance divide, and contain something like fields. The only things missing from structs that are in objects then, are a constructor and methods.
+By using intelligent naming conventions, and well defined function calls, we can give structs the same functionality as objects. Albeit, the code is more complex, but has the same fuctionality.
