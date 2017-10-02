@@ -75,12 +75,14 @@ int main(int argc, char** argv) {
     // While a match has not been found, search
     int notfound=1;
     #pragma omp parallel for
-    for(int i = 0; i < 1000000; i++) {
-        // generate the password
+    for(int i = 0; i < 100000000; i++) {
+        // generate the password 
+        if(notfound == 0) {
         genpass(currpass,passmatch);
         // check for a match
         notfound=test(argv[1], passmatch);
         currpass++;
+	}
     }
     clock_gettime(CLOCK_MONOTONIC,&end_time);
 
