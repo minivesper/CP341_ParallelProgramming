@@ -1,7 +1,8 @@
 /*
  * Program to scale and project data into 2D and find a centroid
  */
-
+#include <cilk/cilk.h>
+#include <cilk/reducer_opadd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -16,18 +17,28 @@ struct phaseball {
 };
 
 struct volume {
-    size_t size;
     size_t last;
-    struct phaseball** objects;
+    size_t size;
+    float* xs;
+    float* ys;
+    float* zs;
+    float* ms;
 };
 
 // Add phaseball to a volume
 void volume_append(struct volume* v, struct phaseball* o) {
     if( v->last == v->size ) {
         (v->size) += 100;
-        v->objects = realloc(v->objects, sizeof(struct phaseball*)*(v->size)+100);
+        v->xs = realloc(v->xs,sizeof(float)*(v->size+100));
+        v->ys = realloc(v->ys,sizeof(float)*(v->size+100));
+        v->zs = realloc(v->zs,sizeof(float)*(v->size+100));
+        v->ms = realloc(v->ms,sizeof(float)*(v->size+100));
     }
-    (v->objects)[(v->last)] = o;
+    //add all fields
+    (v->xs)[(v->last)] = o->x;
+    (v->ys)[(v->last)] = o->y;
+    (v->zs)[(v->last)] = o->z;
+    (v->ms)[(v->last)] = o->mass;
     (v->last) += 1;
     return;
 }
@@ -51,17 +62,22 @@ void place_uniformly(int sx, int ex, int sy, int ey, int sz, int ez, struct volu
 
 // Projects 3D volume to 11x11 2D map and report centroid
 void post_process(struct volume* v, float* cx, float* cy) {
-    double mass_sum=0.0;
-    double wx=0.0;
-    double wy=0.0;
-    for(int i=0; i<v->last; i++) {
-        struct phaseball* o = v->objects[i];
-        mass_sum += o->mass;
-        wx += o->x * o->mass;
-        wy += o->y * o->mass;
+    static CILK_C_REDUCER_OPADD(mass_sum, float, 0.0);	
+    static CILK_C_REDUCER_OPADD(wx, float, 0.0);
+    static CILK_C_REDUCER_OPADD(wy, float, 0.0);
+    CILK_C_REGISTER_REDUCER(mass_sum);
+    CILK_C_REGISTER_REDUCER(wx);
+    CILK_C_REGISTER_REDUCER(wy);
+    for(int i=0; i<(v->last); i++) {
+        REDUCER_VIEW(mass_sum) += v->ms[i];
+        REDUCER_VIEW(wx) += v->xs[i] * v->ms[i];
+        REDUCER_VIEW(wy) += v->ys[i] * v->ms[i];
     }
-    *cx = wx/mass_sum;
-    *cy = wy/mass_sum;
+    *cx = REDUCER_VIEW(wx)/REDUCER_VIEW(mass_sum);
+    *cy = REDUCER_VIEW(wy)/REDUCER_VIEW(mass_sum);
+    CILK_C_UNREGISTER_REDUCER(mass_sum);
+    CILK_C_UNREGISTER_REDUCER(wx);
+    CILK_C_UNREGISTER_REDUCER(wy);
     
     return;
 }
@@ -71,7 +87,10 @@ int main(int argc, char** argv) {
     struct volume v;
     v.size=100;
     v.last=0;
-    v.objects = malloc(sizeof(struct phaseball*)*100);
+    v.xs = malloc(sizeof(float)*100);
+    v.ys = malloc(sizeof(float)*100);
+    v.zs = malloc(sizeof(float)*100);
+    v.ms = malloc(sizeof(float)*100);
 
     // Set the initial configuration
     place_uniformly(-1000,1000,-100,100,-100,100,&v);

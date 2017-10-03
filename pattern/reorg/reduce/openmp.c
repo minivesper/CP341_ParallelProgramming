@@ -16,18 +16,28 @@ struct phaseball {
 };
 
 struct volume {
-    size_t size;
     size_t last;
-    struct phaseball** objects;
+    size_t size;
+    float* xs;
+    float* ys;
+    float* zs;
+    float* ms;
 };
 
 // Add phaseball to a volume
 void volume_append(struct volume* v, struct phaseball* o) {
     if( v->last == v->size ) {
         (v->size) += 100;
-        v->objects = realloc(v->objects, sizeof(struct phaseball*)*(v->size)+100);
+        v->xs = realloc(v->xs,sizeof(float)*(v->size+100));
+        v->ys = realloc(v->ys,sizeof(float)*(v->size+100));
+        v->zs = realloc(v->zs,sizeof(float)*(v->size+100));
+        v->ms = realloc(v->ms,sizeof(float)*(v->size+100));
     }
-    (v->objects)[(v->last)] = o;
+    //add all fields
+    (v->xs)[(v->last)] = o->x;
+    (v->ys)[(v->last)] = o->y;
+    (v->zs)[(v->last)] = o->z;
+    (v->ms)[(v->last)] = o->mass;
     (v->last) += 1;
     return;
 }
@@ -54,11 +64,11 @@ void post_process(struct volume* v, float* cx, float* cy) {
     double mass_sum=0.0;
     double wx=0.0;
     double wy=0.0;
+    #pragma omp parallel for reduction(+:mass_sum,wx,wy)
     for(int i=0; i<v->last; i++) {
-        struct phaseball* o = v->objects[i];
-        mass_sum += o->mass;
-        wx += o->x * o->mass;
-        wy += o->y * o->mass;
+        mass_sum += v->ms[i];
+        wx += v->xs[i] * v->ms[i];
+        wy += v->ys[i] * v->ms[i];
     }
     *cx = wx/mass_sum;
     *cy = wy/mass_sum;
@@ -71,7 +81,10 @@ int main(int argc, char** argv) {
     struct volume v;
     v.size=100;
     v.last=0;
-    v.objects = malloc(sizeof(struct phaseball*)*100);
+    v.xs = malloc(sizeof(float)*100);
+    v.ys = malloc(sizeof(float)*100);
+    v.zs = malloc(sizeof(float)*100);
+    v.ms = malloc(sizeof(float)*100);
 
     // Set the initial configuration
     place_uniformly(-1000,1000,-100,100,-100,100,&v);
