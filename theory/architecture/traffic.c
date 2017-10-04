@@ -56,6 +56,7 @@ int main(int argc, char** argv) {
   char* year;
   LR_t* node;
   LR_t* out_list = malloc(sizeof(LR_t));
+  out_list->year = 0;
   char * line = 0;
   size_t len = 0;
   ssize_t read;
