@@ -7,5 +7,5 @@ gcc -o traffic traffic.c
 for i in {1..150}
 do
     echo $i
-    ./traffic Traffic_violations.csv
+    ./traffic Traffic_Violations.csv
 done
