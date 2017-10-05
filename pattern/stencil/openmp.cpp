@@ -96,15 +96,22 @@ void gaussian_kernel(const int rows, const int cols, const double stddev, double
  */
 void apply_stencil(const int radius, const double stddev, const int rows, const int cols, pixel * const in, pixel * const out) {
     const int dim = radius*2+1;
-    double kernel[dim*dim];
+    double gkernel[dim*dim];
+    double PXkernel[3*3];
+    double PYkernel[3*3];
     gaussian_kernel(dim, dim, stddev, gkernel);
-    prewittX_kernel(dim,dim,PXkernel);
-    prewittY_kernel(dim,dim,PYkernel);
+    double* in_intensities = (double*)calloc(rows*cols, sizeof(double));
+    double* out_intensities = (double*)calloc(rows*cols, sizeof(double));
+    prewittX_kernel(3,3,PXkernel);
+    prewittY_kernel(3,3,PYkernel);
     // For each pixel in the image...
+    #pragma omp parallel for schedule(dynamic,1) collapse(2) 
     for(int i = 0; i < rows; ++i) {
         for(int j = 0; j < cols; ++j) {
             const int out_offset = i + (j*rows);
+            const int intensity_offset = i + (j*rows);
             // ...apply the template centered on the pixel...
+	    in_intensities[intensity_offset] = (out[intensity_offset].red + out[intensity_offset].green + out[intensity_offset].blue)/3.0;
             for(int x = i - radius, kx = 0; x <= i + radius; ++x, ++kx) {
                 for(int y = j - radius, ky = 0; y <= j + radius; ++y, ++ky) {
                     // ...and skip parts of the template outside of the image
@@ -116,6 +123,29 @@ void apply_stencil(const int radius, const double stddev, const int rows, const 
                         out[out_offset].green += gkernel[k_offset] * in[in_offset].green;
                         out[out_offset].blue  += gkernel[k_offset] * in[in_offset].blue;
                     }
+                }
+            }
+        }
+    }
+    #pragma omp parallel for schedule(dynamic,1) collapse(2) 
+    for(int i = 0; i < rows; ++i) {
+        for(int j = 0; j < cols; ++j) {
+            const int out_offset = i + (j*rows);
+            // ...apply the template centered on the pixel...
+            for(int x = i - 1, kx = 0; x <= i + 1; ++x, ++kx) {
+                for(int y = j - 1, ky = 0; y <= j + 1; ++y, ++ky) {
+                    const int in_offset = x + (y*rows);
+                    // ...and skip parts of the template outside of the image
+                    if(x >= 0 && x < rows && y >= 0 && y < cols) {
+                        // Acculate intensities in the output pixel
+                        const int in_offset = x + (y*rows);
+                        const int k_offset = kx + (ky*3);
+                        out_intensities[out_offset] = sqrt(pow(in_intensities[in_offset]*PXkernel[k_offset],2)+pow(in_intensities[in_offset]*PYkernel[k_offset],2));
+                    }   
+                    out[out_offset].red =  out_intensities[out_offset]; 
+                    out[out_offset].green =  out_intensities[out_offset]; 
+                    out[out_offset].blue =  out_intensities[out_offset]; 
+ 
                 }
             }
         }
