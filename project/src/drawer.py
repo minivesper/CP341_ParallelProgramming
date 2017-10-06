@@ -24,7 +24,7 @@ def drawCircle(centerX, centerY, radius, color):
 def drawText(x, y, text, color):
     draw.text((x, y), text, fill=color)
 
-def saveImage(filename="myimage.png"):
+def saveImage(filename):
     im.save(filename)
 #
 # #     from drawer import *
