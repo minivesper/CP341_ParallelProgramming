@@ -19,7 +19,6 @@ struct ibody {
 struct volume {
     size_t size;
     size_t last;
-    size_t current;
     struct ibody** objects;
 };
 
@@ -45,14 +44,14 @@ void parseLine(char* line, char** fields) {
 
 //calculates the mass and position of the volume excluding a single body in the system
 //uses omp reduce to greatly increase speed
-void calculate_centroid(struct volume* v, float* cx, float* cy, float* ms) {
+void calculate_centroid(struct volume* v, float* cx, float* cy, float* ms, int j) {
     double mass_sum=0.0;
     double wx=0.0;
     double wy=0.0;
     #pragma omp parallel for reduction(+:mass_sum,wx,wy)
     for(int i=0; i<v->last; i++) {
       //exclude the current body
-      if(i != v->current) {
+      if(i != j) {
         struct ibody* ib = v->objects[i];
         mass_sum += ib->mass;
         wx += ib->x_pos * ib->mass;
@@ -167,13 +166,11 @@ int main(int argc, char** argv) {
   struct volume in_v;
   in_v.size=100;
   in_v.last=0;
-  in_v.current = 0;
   in_v.objects = malloc(sizeof(struct ibody*)*100);
 
   struct volume out_v;
   out_v.size=100;
   out_v.last=0;
-  out_v.current=0;
   out_v.objects = malloc(sizeof(struct ibody*)*100);
 
   //file read setup
@@ -224,7 +221,6 @@ int main(int argc, char** argv) {
 
   //for each timestep
   for(int i = 0; i < strtol(argv[2],&err_ptr,10); i++) {
-    in_v.current = 0;
     //for each body
     for(int j = 0; j < in_v.last; j++) {
 
@@ -234,13 +230,10 @@ int main(int argc, char** argv) {
       float mass_sum = 0;
 
       //calculate centroid excluding current
-      calculate_centroid(&in_v, &cx, &cy, &mass_sum);
+      calculate_centroid(&in_v, &cx, &cy, &mass_sum, j);
 
       //update the current body and add it to out_v
-      update_curr_body(in_v.objects[in_v.current], &out_v, &cx, &cy, &mass_sum, strtof(argv[3],NULL));
-
-      //next body
-       in_v.current++;
+      update_curr_body(in_v.objects[j], &out_v, &cx, &cy, &mass_sum, strtof(argv[3],NULL));
     }
 
     //write out_v from this timestamp
