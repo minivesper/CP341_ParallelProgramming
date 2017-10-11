@@ -1,0 +1,3 @@
+Mass,x_pos,y_pos,x_vel,y_vel,radius
+1
+100,25,25,10,10,10

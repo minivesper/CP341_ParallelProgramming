@@ -9,8 +9,8 @@ def parseLine(line):
 
 def drawFrame(ibodies, pic_name):
     for b in ibodies:
-        drawCircle(int(b[1]),int(b[2]),int(b[5]),(0,0,0))
-    pn = "./out/" + pic_name + ".png"
+        drawCircle(float(b[1]),float(b[2]),float(b[5]),(0,0,0))
+    pn = "./out/" + str(pic_name) + ".png"
     saveImage(pn)
 
 def main():
@@ -19,7 +19,6 @@ def main():
     elif not os.path.isdir(sys.argv[1]):
         print("second argument must be a directory")
 
-    createImage(600,400)
 
     files = []
     for f in os.listdir(sys.argv[1]):
@@ -28,10 +27,11 @@ def main():
         files.append(fname)
 
     for fname in files:
+        createImage(1000,1000)
         f = open(fname)
         ibodies = []
         f.readline()
-        pic_name = f.readline()[0]
+        pic_name = int(f.readline())
         for line in f:
             ibodies.append(parseLine(line))
         drawFrame(ibodies,pic_name)
