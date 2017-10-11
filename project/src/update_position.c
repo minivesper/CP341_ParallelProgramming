@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include<openmp.h>
+#include<omp.h>
+#include<time.h>
 
 struct ibody {
   float mass;
@@ -112,7 +113,7 @@ void update_curr_body(struct ibody* ib, struct volume* out_v, float* cx, float* 
 void writetoFile(struct volume* out, int timestep) {
   FILE* fw;
   char* fname = malloc(sizeof(char)*100);
-  sprintf(fname, "./data/%d.txt",timestep);
+  sprintf(fname, "./data_ser/%d.txt",timestep);
   fw = fopen(fname,"w+");
   fprintf(fw, "Mass,x_pos,y_pos,x_vel,y_vel,radius\n%d \n",timestep);
   for(int i = 0; i < out->last; i++) {
@@ -175,12 +176,15 @@ int main(int argc, char** argv) {
   float cx;
   float cy;
   float mass_sum;
+  
+  struct timespec start_time;
+  struct timespec end_time;
 
   //for each timestep
+  clock_gettime(CLOCK_MONOTONIC,&start_time);
   for(int i = 0; i < strtol(argv[2],&err_ptr,10); i++) {
     in_v.current = 0;
     //for each body
-    #pragma omp parallel for reduction(+:mass_sum,wx,wy)
     for(int j = 0; j < in_v.last; j++) {
       // printf("%d\n",j);
       cx = 0;
@@ -193,8 +197,10 @@ int main(int argc, char** argv) {
     writetoFile(&out_v, i);
     memcpy(&in_v,&out_v,sizeof(out_v));
     out_v.last = 0;
-    printf("timestep %d complete\n", i);
   }
-
+  clock_gettime(CLOCK_MONOTONIC,&end_time);
+  long msec;
+  msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
+  printf("serial time: %dms\n",msec);
   return 0;
 }
