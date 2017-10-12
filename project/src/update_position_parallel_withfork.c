@@ -140,7 +140,7 @@ void writetoFile(struct volume* out, int timestep) {
   char* fname = malloc(sizeof(char)*100);
 
   //build filename string
-  sprintf(fname, "./data_par/%d.txt",timestep);
+  sprintf(fname, "./data_par_withfork/%d.txt",timestep);
 
   //open file and print headers to file
   fw = fopen(fname,"w+");
@@ -218,6 +218,10 @@ int main(int argc, char** argv) {
   struct timespec end_time;
 
   clock_gettime(CLOCK_MONOTONIC,&start_time);
+  #pragma omp parallel
+  {
+  #pragma omp single nowait
+  {
   //for each timestep
   for(int i = 0; i < strtol(argv[2],&err_ptr,10); i++) {
     //for each body
@@ -235,8 +239,18 @@ int main(int argc, char** argv) {
       update_curr_body(in_v.objects[j], &out_v, &cx, &cy, &mass_sum, strtof(argv[3],NULL));
     }
 
+    //copy to writebuffer
+    struct volume write_v;
+    write_v.size=out_v.size;
+    write_v.last=out_v.last;
+    write_v.objects = malloc(sizeof(struct ibody*)*out_v.size);
+    memcpy(&write_v,&out_v,sizeof(out_v));
     
-    writetoFile(&out_v, i);
+    //write out_v from this timestamp
+    #pragma omp task firstprivate(write_v)
+    {
+        writetoFile(&write_v, i);
+    }
 
     //change out to in
     memcpy(&in_v,&out_v,sizeof(out_v));
@@ -244,14 +258,14 @@ int main(int argc, char** argv) {
     //reset out
     out_v.last = 0;
 
-  }
+  }}}
 
   clock_gettime(CLOCK_MONOTONIC,&end_time);
 
   //timing
   long msec;
   msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
-  printf("parallel time: %dms\n",msec);
+  printf("parallel with fork time: %dms\n",msec);
 
   return 0;
 }
