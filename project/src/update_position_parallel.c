@@ -219,6 +219,10 @@ int main(int argc, char** argv) {
 
   clock_gettime(CLOCK_MONOTONIC,&start_time);
   //for each timestep
+  #pragma omp parallel
+  {
+  #pragma omp single nowait
+  {
   for(int i = 0; i < strtol(argv[2],&err_ptr,10); i++) {
     //for each body
     for(int j = 0; j < in_v.last; j++) {
@@ -244,7 +248,7 @@ int main(int argc, char** argv) {
     //reset out
     out_v.last = 0;
 
-  }
+  }}}
 
   clock_gettime(CLOCK_MONOTONIC,&end_time);
 
