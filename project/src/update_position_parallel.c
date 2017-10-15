@@ -225,6 +225,7 @@ int main(int argc, char** argv) {
   {
   for(int i = 0; i < strtol(argv[2],&err_ptr,10); i++) {
     //for each body
+    #pragma omp parallel for
     for(int j = 0; j < in_v.last; j++) {
 
       //centroid vars
@@ -239,7 +240,7 @@ int main(int argc, char** argv) {
       update_curr_body(in_v.objects[j], &out_v, &cx, &cy, &mass_sum, strtof(argv[3],NULL));
     }
 
-    
+
     writetoFile(&out_v, i);
 
     //change out to in

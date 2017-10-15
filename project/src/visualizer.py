@@ -22,7 +22,7 @@ def main():
 
     files = []
     for f in os.listdir(sys.argv[1]):
-        fname = "./data/"
+        fname = sys.argv[1]
         fname += f
         files.append(fname)
 
