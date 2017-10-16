@@ -262,7 +262,7 @@ int main(int argc, char** argv) {
   //timing
   long msec;
   msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
-  printf("parallel with fork time: %dms\n",msec);
+  printf("parallel with just reduce time: %dms\n",msec);
 
   return 0;
 }

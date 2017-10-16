@@ -1,0 +1,102 @@
+0
+3 bodies 100 timesteps
+serial time: 141ms
+parallel time: 160ms
+parallel with just reduce time: 138ms
+parallel with fork time: 58ms
+600 bodies 100 timesteps
+serial time: 382ms
+parallel time: 372ms
+parallel with just reduce time: 341ms
+parallel with fork time: 122ms
+6000 bodies 10 timesteps
+serial time: 2678ms
+parallel time: 2456ms
+parallel with just reduce time: 2419ms
+parallel with fork time: 2480ms
+6000 bodies 100 timesteps
+12000 bodies 10 timesteps
+serial time: 9764ms
+parallel time: 10387ms
+parallel with just reduce time: 9907ms
+parallel with fork time: 8820ms
+100000 bodies 1 timesteps
+serial time: 67058ms
+parallel time: 61585ms
+parallel with just reduce time: 69332ms
+parallel with fork time: 61312ms
+1
+3 bodies 100 timesteps
+serial time: 167ms
+parallel time: 167ms
+parallel with just reduce time: 192ms
+parallel with fork time: 55ms
+600 bodies 100 timesteps
+serial time: 390ms
+parallel time: 367ms
+parallel with just reduce time: 427ms
+parallel with fork time: 90ms
+6000 bodies 10 timesteps
+serial time: 2579ms
+parallel time: 2572ms
+parallel with just reduce time: 2556ms
+parallel with fork time: 2270ms
+6000 bodies 100 timesteps
+12000 bodies 10 timesteps
+serial time: 117166ms
+parallel time: 9094ms
+parallel with just reduce time: 9059ms
+parallel with fork time: 219179ms
+100000 bodies 1 timesteps
+serial time: 74839ms
+parallel time: 71118ms
+parallel with just reduce time: 71173ms
+parallel with fork time: 168314ms
+2
+3 bodies 100 timesteps
+serial time: 144ms
+parallel time: 182ms
+parallel with just reduce time: 168ms
+parallel with fork time: 65ms
+600 bodies 100 timesteps
+serial time: 325ms
+parallel time: 381ms
+parallel with just reduce time: 427ms
+parallel with fork time: 95ms
+6000 bodies 10 timesteps
+serial time: 2591ms
+parallel time: 2373ms
+parallel with just reduce time: 2580ms
+parallel with fork time: 2282ms
+6000 bodies 100 timesteps
+12000 bodies 10 timesteps
+serial time: 9166ms
+parallel time: 225279ms
+parallel with just reduce time: 8887ms
+parallel with fork time: 8682ms
+100000 bodies 1 timesteps
+serial time: 281219ms
+parallel time: 61943ms
+parallel with just reduce time: 60742ms
+parallel with fork time: 69957ms
+3
+3 bodies 100 timesteps
+serial time: 160ms
+parallel time: 162ms
+parallel with just reduce time: 134ms
+parallel with fork time: 53ms
+600 bodies 100 timesteps
+serial time: 321ms
+parallel time: 338ms
+parallel with just reduce time: 395ms
+parallel with fork time: 89ms
+6000 bodies 10 timesteps
+serial time: 2474ms
+parallel time: 2497ms
+parallel with just reduce time: 2534ms
+parallel with fork time: 2273ms
+6000 bodies 100 timesteps
+12000 bodies 10 timesteps
+serial time: 281355ms
+parallel time: 9107ms
+parallel with just reduce time: 8853ms
