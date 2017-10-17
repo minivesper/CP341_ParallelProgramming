@@ -3,13 +3,20 @@ import random
 
 def genCluster(body_num, centerX, centerY,outfname):
     f = open(outfname, "a")
+    f.write("1000000,"+centerX+","+centerY+",0,0,20\n")
     for b in range(int(body_num)):
         body = ""
-        body += str(100000) + ","
-        body += str(int(centerX) + random.randint(-100, 100)) + ","
-        body += str(int(centerY) + random.randint(-100, 100)) + ","
-        body += str(0) + ","
-        body += str(0) + ","
+        body += str(2) + ","
+        if b%4 == 0:
+            body += str(int(centerX) + random.randint(50, 600)) + ","
+            body += str(int(centerY) + random.randint(0,0)) + ","
+            body += str(random.randint(0,0)) + ","
+            body += str(random.randint(-150,-50)) + ","
+        else:
+            body += str(int(centerX) + random.randint(-600, -50)) + ","
+            body += str(int(centerY) + random.randint(0,0)) + ","
+            body += str(random.randint(0,0)) + ","
+            body += str(random.randint(50,150)) + ","
         body += str(1) + "\n"
         f.write(body)
 

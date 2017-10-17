@@ -14,7 +14,6 @@ serial time: 2678ms
 parallel time: 2456ms
 parallel with just reduce time: 2419ms
 parallel with fork time: 2480ms
-6000 bodies 100 timesteps
 12000 bodies 10 timesteps
 serial time: 9764ms
 parallel time: 10387ms

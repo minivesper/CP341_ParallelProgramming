@@ -10,7 +10,7 @@ def parseLine(line):
 def drawFrame(ibodies, pic_name):
     for b in ibodies:
         drawCircle(float(b[1]),float(b[2]),float(b[5]),(0,0,0))
-    pn = "./out/" + str(pic_name) + ".png"
+    pn = "./out_sSystem/" + str(pic_name) + ".png"
     saveImage(pn)
 
 def main():
